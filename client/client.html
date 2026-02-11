@@ -5,7 +5,39 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const sendFetchRequest = async (form) => {
+      const url = form.getAttribute('action');
+      const method = form.getAttribute('method');
+      
+      // If form is userForm, will not give anything
+      const name = form.querySelector('#nameField').value;
+      const age = form.querySelector('#ageField').value;
 
+      const formData = JSON.stringify({name, age});
+
+      console.log(formData);
+
+      const options = {
+        method: method,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json' 
+        },
+        body: formData
+      }
+
+      const fetchPromise = fetch(url, options);
+
+      fetchPromise.then((response) => { handleResponse(response) });
+    }
+
+    const init = () => {
+      const nameForm = document.querySelector('#nameForm');
+      const userForm = document.querySelector('#userForm');
+
+      nameForm.addEventListener('submit', () => sendFetchRequest(nameForm));
+      userForm.addEventListener('submit', () => sendFetchRequest(userForm));
+    }
   </script>
 </head>
 <body>

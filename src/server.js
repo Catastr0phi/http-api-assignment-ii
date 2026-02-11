@@ -7,7 +7,8 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 const urlStruct = {
     '/': clientHandler.getIndex,
     '/style.css': clientHandler.getStyle,
-    '/getUsers': apiHandler.getUsers
+    '/getUsers': apiHandler.getUsers,
+    '/addUser': apiHandler.addUser
 };
 
 
