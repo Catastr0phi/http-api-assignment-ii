@@ -10,14 +10,17 @@ const respond = (request, response, status, object) => {
         'Content-Length': Buffer.byteLength(jsonString, 'utf8'),
     });
 
-    response.write(jsonString);
+    // Dont send response body on HEAD requests or 204 codes
+    if (request.method !== 'HEAD' && status !== 204) {
+        response.write(jsonString);
+    }
     response.end();
 }
 
 const getUsers = (request, response) => {
     const usersJSON = JSON.stringify(users);
-    
-    respond(request, response, 200, usersJSON);
+
+    return respond(request, response, 200, usersJSON);
 }
 
 const addUser = (request, response) => {
@@ -34,15 +37,13 @@ const addUser = (request, response) => {
         responseJSON.message = 'Name and age are both required.';
         responseJSON.id = 'missingParams';
 
-        respond(request, response, 400, responseJSON);
-
-        return;
+        return respond(request, response, 400, responseJSON);
     }
 
     let code = 204;
 
     // Check for existing name
-    if (!users[name]){
+    if (!users[name]) {
         // If name doesnt exist, create user and update code
         users[name] = {
             name: name
@@ -54,8 +55,8 @@ const addUser = (request, response) => {
     users[name].age = age;
 
     // Send response based on code
-    if (code == 201) respond(request, response, code, responseJSON);
-    else respond(request, response, code, {}); // 204 has no response body
+    if (code == 201) return respond(request, response, code, responseJSON);
+    else return respond(request, response, code, {}); // 204 has no response body
 }
 
 module.exports = {

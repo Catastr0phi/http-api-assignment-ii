@@ -6,6 +6,41 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
 
   <script>
+    const handleResponse = async (response) => {
+        // get page content section and clear
+        const content = document.querySelector('#content');
+        content.innerHTML = '';
+
+        // Create header for status message
+        const statusHeader = document.createElement('h1');
+
+        // Switch statement for header based on code
+        switch (response.status){
+          case 200:
+            statusHeader.textContent = 'Success';
+            break;
+          case 201:
+            statusHeader.textContent = 'Created';
+            break;
+          case 204:
+            statusHeader.textContent = 'Updated (No Content)';
+            break;
+          case 400: 
+            statusHeader.textContent = 'Bad Request';
+          case 404:
+            statusHeader.textContent = '404';
+            break;
+          default:
+            statusHeader.textContent = 'Error not implemented. Something went very wrong!'
+            break;
+        }
+
+        content.appendChild(statusHeader);
+
+        // get json obj
+        const jsonOBJ = await response.json();
+    }
+
     const sendFetchRequest = async (form) => {
       const url = form.getAttribute('action');
       const method = form.getAttribute('method');
@@ -31,10 +66,19 @@
           body: formData
         }
       }
+      // No body on other requests
+      else {
+        options = {
+          method: method,
+          headers: {
+            'Accept': 'application/json'
+          },
+        }
+      }
 
       const fetchResponse = await fetch(url, options);
 
-      return fetchResponse;
+      handleResponse(fetchResponse);
     }
 
 
