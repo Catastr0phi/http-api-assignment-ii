@@ -1,45 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Our simple HTTP server</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-  
+
   <script>
     const sendFetchRequest = async (form) => {
       const url = form.getAttribute('action');
       const method = form.getAttribute('method');
-      
+
       // If form is userForm, will not give anything
       const name = form.querySelector('#nameField').value;
       const age = form.querySelector('#ageField').value;
 
-      const formData = JSON.stringify({name, age});
+      const formData = JSON.stringify({ name, age });
 
-      console.log(formData);
+      let options = {};
 
-      const options = {
-        method: method,
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json' 
-        },
-        body: formData
+      debugger;
+
+      if (method === "post") {
+        options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': formData.length,
+            'Accept': 'application/json'
+          },
+          body: formData
+        }
       }
 
-      const fetchPromise = fetch(url, options);
+      const fetchResponse = await fetch(url, options);
 
-      fetchPromise.then((response) => { handleResponse(response) });
+      return fetchResponse;
     }
+
 
     const init = () => {
       const nameForm = document.querySelector('#nameForm');
       const userForm = document.querySelector('#userForm');
 
-      nameForm.addEventListener('submit', () => sendFetchRequest(nameForm));
-      userForm.addEventListener('submit', () => sendFetchRequest(userForm));
+      const sendPostRequest = (e) => {
+        e.preventDefault();
+        sendFetchRequest(nameForm);
+        return false;
+      }
+
+      const sendGetRequest = (e) => {
+        e.preventDefault();
+        sendFetchRequest(userForm);
+        return false;
+      }
+
+      nameForm.addEventListener('submit', sendPostRequest);
+      userForm.addEventListener('submit', sendGetRequest);
     }
+
+    //When the window loads, run init.
+    window.onload = init;
   </script>
 </head>
+
 <body>
   <section id="top">
     <h3>POST Status Code Tests</h3>
@@ -47,7 +70,7 @@
       <label for="name">Name: </label>
       <input id="nameField" type="text" name="name" />
       <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
+      <input id="ageField" type="number" name="age" min="0" max="100" step="1" />
       <input type="submit" value="Add User" />
     </form>
     <form id="userForm" action="/getUsers" method="get">
@@ -65,4 +88,5 @@
   <section id="content">
   </section>
 </body>
+
 </html>

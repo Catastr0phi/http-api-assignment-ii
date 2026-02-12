@@ -3,13 +3,14 @@ const users = {}
 // Common function for sending a response
 const respond = (request, response, status, object) => {
     console.log(object);
+    jsonString = JSON.stringify(object);
 
     response.writeHead(status, {
         'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(object, 'utf8'),
+        'Content-Length': Buffer.byteLength(jsonString, 'utf8'),
     });
 
-    response.write(object);
+    response.write(jsonString);
     response.end();
 }
 

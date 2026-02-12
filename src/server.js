@@ -8,12 +8,14 @@ const urlStruct = {
     '/': clientHandler.getIndex,
     '/style.css': clientHandler.getStyle,
     '/getUsers': apiHandler.getUsers,
-    '/addUser': apiHandler.addUser
+    '/addUser': apiHandler.addUser,
+    'notFound': clientHandler.getIndex
 };
 
 
 const onRequest = (request, response) => {
     console.log(request.url);
+    console.log(request.headers);
 
     // URL parsing
     const protocol = request.connection.encrypted ? 'https' : 'http';
@@ -24,11 +26,26 @@ const onRequest = (request, response) => {
     // store query parameters
     request.query = Object.fromEntries(parsedUrl.searchParams);
 
-    if (urlStruct[parsedUrl.pathname]) {
-        urlStruct[parsedUrl.pathname](request, response);
-    } else {
-        urlStruct.notFound(request, response);
-    }
+    let body = [];
+    request.on('data', (chunk) => {
+        body.push(chunk);
+    });
+
+    request.on('end', () => {
+        console.log(body[1]);
+        if (body.length !== 0) {
+
+            const bodyString = Buffer.concat(body).toString();
+            console.log(bodyString);
+            request.body = JSON.parse(bodyString);
+        }
+
+        if (urlStruct[parsedUrl.pathname]) {
+            urlStruct[parsedUrl.pathname](request, response);
+        } else {
+            urlStruct.notFound(request, response);
+        }
+    })
 }
 
 http.createServer(onRequest).listen(port, () => {
