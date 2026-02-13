@@ -3,7 +3,7 @@ const users = {}
 // Common function for sending a response
 const respond = (request, response, status, object) => {
     console.log(object);
-    jsonString = JSON.stringify(object);
+    const jsonString = JSON.stringify(object);
 
     response.writeHead(status, {
         'Content-Type': 'application/json',
