@@ -59,7 +59,17 @@ const addUser = (request, response) => {
     else return respond(request, response, code, {}); // 204 has no response body
 }
 
+const notFound = (request, response) => {
+    const notFoundJSON = {
+        message: 'The page you are looking for was not found.',
+        id: 'notFound'
+    }
+
+    return respond(request, response, 404, notFoundJSON);
+}
+
 module.exports = {
     getUsers,
-    addUser
+    addUser,
+    notFound
 }

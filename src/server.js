@@ -9,7 +9,7 @@ const urlStruct = {
     '/style.css': clientHandler.getStyle,
     '/getUsers': apiHandler.getUsers,
     '/addUser': apiHandler.addUser,
-    'notFound': clientHandler.getIndex
+    'notFound': apiHandler.notFound
 };
 
 
