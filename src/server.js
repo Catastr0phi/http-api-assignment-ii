@@ -15,7 +15,6 @@ const urlStruct = {
 
 const onRequest = (request, response) => {
     console.log(request.url);
-    console.log(request.headers);
 
     // URL parsing
     const protocol = request.connection.encrypted ? 'https' : 'http';
@@ -32,7 +31,8 @@ const onRequest = (request, response) => {
     });
 
     request.on('end', () => {
-        console.log(body[1]);
+
+        // Update request.body only if body data was recieved
         if (body.length !== 0) {
 
             const bodyString = Buffer.concat(body).toString();

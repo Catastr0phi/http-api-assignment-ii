@@ -56,7 +56,6 @@
       const url = form.getAttribute('action');
       const method = form.getAttribute('method');
 
-      // If form is userForm, will not give anything
       const name = form.querySelector('#nameField').value;
       const age = form.querySelector('#ageField').value;
 
@@ -79,8 +78,6 @@
 
     // Can also handle HEAD requests
     const sendGetRequest = async (form) => {
-      //const url = form.getAttribute('action');
-      //const method = form.getAttribute('method');
 
       const url = form.querySelector('#urlField').value;
       const method = form.querySelector('#methodSelect').value;
@@ -102,6 +99,7 @@
       const nameForm = document.querySelector('#nameForm');
       const userForm = document.querySelector('#userForm');
 
+      // Prevent the forms default behavior
       const sendPost = (e) => {
         e.preventDefault();
         sendPostRequest(nameForm);
